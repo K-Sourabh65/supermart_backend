@@ -5,39 +5,46 @@ const bcrypt = require("bcrypt");
 const userSchema = new mongoose.Schema({
   name: {
     type: String,
-    required: true,
+    trim: true,
+    required: [true,`Name is a required field`] ,
   },
   email: {
     type: String,
-    required: true,
+    trim: true,
+    required: [true,`Email is a required field`] ,
   },
   password: {
     type: String,
     required: true,
+    trim: true,
+    minLength: [7,'Min length should be 7'],
   },
   storeName: {
     type: String,
-    required: true,
+    trim: true,
+    required: [true,`StoreName is a required field`] ,
   },
   address: {
     type: String,
-    required: true,
+    trim: true,
+    required: [true,`Address is a required field`] ,
   },
   mobileNo: {
     type: Number,
+    trim: true,
     required: true,
   },
-  tokens: [
+  /*tokens: [
     {
       token: {
         type: String,
         required: true,
       },
     },
-  ],
+  ],*/
 });
-//for hashing the password
 
+//for hashing the password
 userSchema.pre("save", async function (next) {
   if (this.isModified("password")) {
     this.password = hashedPass = await bcrypt.hash(this.password, 12);
@@ -45,11 +52,12 @@ userSchema.pre("save", async function (next) {
   next();
 });
 
+//generating the JWT token 
 userSchema.methods.generateAuthToken = async function () {
   try {
     let token = jwt.sign({ _id: this._id }, process.env.SECRET_KEY);
-    this.tokens = this.tokens.concat({ token: token });
-    await this.save();
+    // this.tokens = this.tokens.concat({ token: token });
+    // await this.save();
     return token;
   } catch (err) {
     console.log(err);
