@@ -32,12 +32,12 @@ router.post("/register", async (req, res) => {
 
         if(userRegistered){
             const token = await user.generateAuthToken();
-            
+
             res.cookie("jwtoken", token, {
                 expires: new Date(Date.now() + 24*60*60*1000), //token valid for 24hrs
                 httpOnly: true
             });
-
+            console.log('cookie');
             user.password = undefined;
             res.status(200).json({
                 success: true,

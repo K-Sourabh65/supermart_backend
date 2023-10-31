@@ -21,18 +21,18 @@ router.post("/add_products", async (req, res) =>{
                 success: false,
                 error: "produxt already exist"
             });
-        }
-
-        const product = new Product({productId, productName, catagory, quantity, unit, price});
+        }else{
+            const product = new Product({productId, productName, catagory, quantity, unit, price});
         
-        const addProduct = await product.save();
+            const addProduct = await product.save();
         
-        if(addProduct){
-            res.status(201).json({
-                success: true,
-                message: 'Product added Succesfully !'
-            })
-        }
+            if(addProduct){
+                res.status(201).json({
+                    success: true,
+                    message: 'Product added Succesfully!'
+                })
+            }
+        }        
     }catch(err){
         res.status(500).json({
             success: false,
